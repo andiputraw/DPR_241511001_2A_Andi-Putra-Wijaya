@@ -3,12 +3,22 @@
 namespace App\Controllers;
 
 use App\Models\Anggota;
+use App\Models\KomponenGaji;
+use App\Models\Penggajian;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
 class PenggajianController extends BaseController
 {
+    public function get_komponen_gaji($id) {
+        $anggotaModel = new Anggota();
+        $anggota = $anggotaModel->find($id);
+
+        $komponenGajiModel = new KomponenGaji();
+        $komponenGaji = $komponenGajiModel->orWhere('jabatan', $anggota['jabatan'])->orWhere('jabatan', 'Semua')->findAll();
+        return $this->response->setJSON($komponenGaji);
+    }
     /**
      * Return an array of resource objects, themselves in array format.
      *
@@ -71,7 +81,16 @@ class PenggajianController extends BaseController
      */
     public function new()
     {
-        //
+        $anggotaModel = new Anggota();
+        /**
+         *  LEFT JOIN penggajian p ON p.id_anggota = a.id_anggota 
+	    *  WHERE p.id_komponen_gaji IS NULL 
+        */
+        $data['anggota'] = $anggotaModel->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'left')
+        ->where('penggajian.id_komponen_gaji', null)
+        ->select('anggota.id_anggota, anggota.nama_depan, anggota.nama_belakang')
+        ->findAll();
+        return view('penggajian/create', $data);
     }
 
     /**
@@ -81,7 +100,20 @@ class PenggajianController extends BaseController
      */
     public function create()
     {
-        //
+        $input = $this->request->getPost();
+        $penggajianModel = new Penggajian();
+
+        $insertData = [];
+
+        foreach ($input['penggajian'] as  $value) {
+            $insertData[] = [
+                'id_anggota' => $input['id_anggota'],
+                'id_komponen_gaji' => $value
+            ];
+        }
+
+        $penggajianModel->insertBatch($insertData);
+        return redirect()->to('/penggajian');
     }
 
     /**

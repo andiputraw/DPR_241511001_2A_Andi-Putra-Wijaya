@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="container mt-5">
-    <h1>Create Komponen Gaji</h1>
+    <h1>Create New Penggajian</h1>
 
     <?php if (session()->has('errors')) : ?>
         <div class="alert alert-danger">
@@ -14,58 +14,22 @@
         </div>
     <?php endif; ?>
 
-    <form action="/komponen-gaji" method="post">
-        <div class="mb-3">
-            <label for="id_komponen_gaji" class="form-label">ID Komponen Gaji</label>
-            <input type="number" class="form-control" id="id_komponen_gaji" name="id_komponen_gaji" value="<?= old('id_komponen_gaji') ?>" >
-        </div>
-        <div class="mb-3">
-            <label for="nama_komponen" class="form-label">Nama Komponen</label>
-            <input type="text" class="form-control" id="nama_komponen" name="nama_komponen" value="<?= old('nama_komponen') ?>" >
-        </div>
-        <div class="mb-3">
-            <label for="nominal" class="form-label">Nominal</label>
-            <input type="number" class="form-control" id="nominal" name="nominal" value="<?= old('nominal') ?>s" >
-        </div>
-
-
-
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="kategori">Pilih kategori</label>
-                <select class="form-select" name="kategori" id="kategori">
-                    <option selected value="">Kategori</option>
-                    <option value="Gaji Pokok">Gaji Pokok</option>
-                    <option value="Tunjangan Melekat">Tunjangan Melekat</option>
-                    <option value="Tunjangan Lain">Tunjangan Lain</option>
-                </select>
-            </div>
-        </div>
-
-
-        <div class="mb-3">  
-            <label for="satuan">Pilih satuan</label>
-            <select class="form-select" name="satuan" id="satuan">
-                <option selected value="">Status Satuan</option>
-                <option value="Periode">Periode</option>
-                <option value="Bulan">Bulan</option>
-                <option value="Hari">Hari</option>
+    <form action="/penggajian" method="post">
+        <div class="mb-3" id="head">
+            <label for="id_anggota" class="form-label">Anggota</label>
+            <select class="form-select" name="id_anggota" id="id_anggota">
+                    <option selected value="">Pilih Anggota</option>
+                    <?php foreach ($anggota as $anggota) : ?>
+                        <option value="<?= $anggota['id_anggota'] ?>"><?= $anggota['nama_depan'] . ' ' . $anggota['nama_belakang'] ?></option>
+                    <?php endforeach ?>
             </select>
         </div>
 
-
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="jabatan">Pilih jabatan</label>
-                <select class="form-select" name="jabatan" id="jabatan">
-                    <option selected value="">Jabatan</option>
-                    <option value="Ketua">Ketua</option>
-                    <option value="Wakil Ketua">Wakil Ketua</option>
-                    <option value="Anggota">Anggota</option>
-                    <option value="Semua">Semua</option>
-                </select>
-            </div>
-        </div>
+        <button type="button" class="btn btn-secondary" id="tambahKomponenGaji" >
+            Tambah Komponen Gaji
+        </button>
+  
+        
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
             Create
@@ -91,4 +55,32 @@
         </div>
     </form>
 </div>
+
+<script>
+    const btnTambahGaji = document.getElementById('tambahKomponenGaji')
+    const head = document.getElementById('head')
+    const anggota =  document.getElementById('id_anggota')
+    
+    let listKategori = [];
+
+    anggota.addEventListener('change', async () => {
+        const res = await fetch('/penggajian/komponen/' + anggota.value).then(res => res.json())
+        anggota.setAttribute('readonly', 'readonly')
+        console.log(res)
+        listKategori = res
+    })
+    btnTambahGaji.addEventListener('click', () => {
+        if(listKategori.length <= 0 ) return;
+        const d = document.createElement('div')
+        // <div class="mb-3">
+        d.setAttribute('class', 'mb-3')
+        d.innerHTML = `
+            <select class="form-select" name="penggajian[]">
+                    <option selected value="">Pilih Gaji</option>
+                    ${listKategori.map(k => `<option value="${k.id_komponen_gaji}">${k.nama_komponen}</option>`).join('')}
+            </select>
+        `
+        head.insertAdjacentElement('afterend', d)
+    })
+</script>
 <?= $this->endSection() ?>

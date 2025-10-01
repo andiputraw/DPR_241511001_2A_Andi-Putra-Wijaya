@@ -27,8 +27,8 @@
         <tbody>
             <?php foreach ($datas as $data): ?>
                 <tr>
-                    <td><?= $data['id_anggota'] ?></td>
-                    <td> <a href="/penggajian/<?= $data['id_anggota'] ?>"><?= $data['gelar_depan'] ?></a> </td>
+                    <td> <a href="/penggajian/<?= $data['id_anggota'] ?>"> <?= $data['id_anggota'] ?> </a></td>
+                    <td> <?= $data['gelar_depan'] ?> </td>
                     <td><?= $data['nama_depan'] ?></td>
                     <td><?= $data['nama_belakang'] ?></td>
 
