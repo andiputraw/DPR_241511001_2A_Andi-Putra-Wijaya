@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\UserModel;
+use App\Models\Pengguna;
 
 class AuthController extends BaseController
 {
@@ -12,6 +12,7 @@ class AuthController extends BaseController
         $data = [
             'title' => 'Login'
         ];
+
         return view('login', $data);
     }
 
@@ -27,14 +28,16 @@ class AuthController extends BaseController
             return redirect()->to('/login')->withInput();
         }
 
-        $userModel = new UserModel();
+        $userModel = new Pengguna();
         $user = $userModel->getUserByUsername($this->request->getPost('username'));
 
         if ($user && password_verify($this->request->getPost('password'), $user['password'])) {
             $session->set([
-                'user_id' => $user['id'],
+                'email' => $user['email'],
+                'id_pengguna' => $user['id_pengguna'],
                 'username' => $user['username'],
-                'fullname' => $user['fullname'],
+                'nama_depan' => $user['nama_depan'],
+                'nama_belakang' => $user['nama_belakang'],
                 'role' => $user['role'],
                 'isLoggedIn' => true,
             ]);
