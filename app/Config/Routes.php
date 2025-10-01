@@ -15,6 +15,7 @@ $routes->get('logout', 'AuthController::logout');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Dashboard::index');
-    $routes->resource('mata-kuliah', ['controller' => 'MataKuliahController']);
+    // $routes->resource('mata-kuliah', ['controller' => 'MataKuliahController']);
+    $routes->resource('anggota', ['controller' => 'AnggotaController']);
     // $routes->get('mata-kuliah/delete/(:num)', 'MataKuliahController::destroy/$1');
 });
