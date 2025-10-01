@@ -39,7 +39,7 @@ class KomponenGajiController extends BaseController
      */
     public function new()
     {
-        //
+        return view('komponen_gaji/create');
     }
 
     /**
@@ -49,7 +49,24 @@ class KomponenGajiController extends BaseController
      */
     public function create()
     {
-        //
+        $validation = $this->validate([
+            'id_komponen_gaji' => 'required|numeric',
+            'nama_komponen' => 'required',
+            'nominal' => 'required',
+            'kategori' => 'required',
+            'satuan' => 'required',
+            'jabatan' => 'required',
+        ]);
+
+        if (!$validation) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $data = $this->request->getPost();
+
+        $komponenGaji = new KomponenGaji();
+        $komponenGaji->insert($data);
+        return redirect()->to('/komponen-gaji');
     }
 
     /**

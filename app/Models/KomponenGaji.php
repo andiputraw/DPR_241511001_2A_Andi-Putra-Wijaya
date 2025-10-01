@@ -7,12 +7,12 @@ use CodeIgniter\Model;
 class KomponenGaji extends Model
 {
     protected $table            = 'komponen_gaji';
-    protected $primaryKey       = 'id_komponent_gaji';
+    protected $primaryKey       = 'id_komponen_gaji';
     protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_komponent_gaji', 'nama_komponen', 'kategori', 'jabatan', 'nominal', 'satuan'];
+    protected $allowedFields    = ['id_komponen_gaji', 'nama_komponen', 'kategori', 'jabatan', 'nominal', 'satuan'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="container mt-5">
-    <h1>Create Anggota</h1>
+    <h1>Create Komponen Gaji</h1>
 
     <?php if (session()->has('errors')) : ?>
         <div class="alert alert-danger">
@@ -14,29 +14,43 @@
         </div>
     <?php endif; ?>
 
-    <form action="/anggota" method="post">
+    <form action="/komponen-gaji" method="post">
         <div class="mb-3">
-            <label for="id_anggota" class="form-label">ID Anggota</label>
-            <input type="number" class="form-control" id="id_anggota" name="id_anggota" value="<?= old('id_anggota') ?>" >
+            <label for="id_komponen_gaji" class="form-label">ID Komponen Gaji</label>
+            <input type="number" class="form-control" id="id_komponen_gaji" name="id_komponen_gaji" value="<?= old('id_komponen_gaji') ?>" >
         </div>
         <div class="mb-3">
-            <label for="nama_depan" class="form-label">Nama Depan</label>
-            <input type="text" class="form-control" id="nama_depan" name="nama_depan" value="<?= old('nama_depan') ?>" >
+            <label for="nama_komponen" class="form-label">Nama Komponen</label>
+            <input type="text" class="form-control" id="nama_komponen" name="nama_komponen" value="<?= old('nama_komponen') ?>" >
         </div>
         <div class="mb-3">
-            <label for="nama_belakang" class="form-label">Nama Belakang</label>
-            <input type="text" class="form-control" id="nama_belakang" name="nama_belakang" value="<?= old('nama_belakang') ?>s" >
+            <label for="nominal" class="form-label">Nominal</label>
+            <input type="number" class="form-control" id="nominal" name="nominal" value="<?= old('nominal') ?>s" >
         </div>
+
 
 
         <div class="mb-3">
-            <label for="gelar_depan" class="form-label">Gelar Depan</label>
-            <input type="text" class="form-control" id="gelar_depan" name="gelar_depan" value="<?= old('gelar_depan') ?>" >
+            <div class="mb-3">
+                <label for="kategori">Pilih kategori</label>
+                <select class="form-select" name="kategori" id="kategori">
+                    <option selected value="">Kategori</option>
+                    <option value="Gaji Pokok">Gaji Pokok</option>
+                    <option value="Tunjangan Melekat">Tunjangan Melekat</option>
+                    <option value="Tunjangan Lain">Tunjangan Lain</option>
+                </select>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="gelar_belakang" class="form-label">Gelar Belakang</label>
-            <input type="text" class="form-control" id="gelar_belakang" name="gelar_belakang"   value="<?= old('gelar_belakang') ?>" >
+
+        <div class="mb-3">  
+            <label for="satuan">Pilih satuan</label>
+            <select class="form-select" name="satuan" id="satuan">
+                <option selected value="">Status Satuan</option>
+                <option value="Periode">Periode</option>
+                <option value="Bulan">Bulan</option>
+                <option value="Hari">Hari</option>
+            </select>
         </div>
 
 
@@ -48,20 +62,9 @@
                     <option value="Ketua">Ketua</option>
                     <option value="Wakil Ketua">Wakil Ketua</option>
                     <option value="Anggota">Anggota</option>
+                    <option value="Semua">Semua</option>
                 </select>
             </div>
-        </div>
-
-
-        <div class="mb-3">
-            <label for="status_pernikahan">Pilih status pernikahan</label>
-            <select class="form-select" name="status_pernikahan" id="status_pernikahan">
-                <option selected value="">Status Pernikahan</option>
-                <option value="Kawin">Kawin</option>
-                <option value="Belum Kawin">Belum Kawin</option>
-                <option value="Cerai Hidup">Cerai Hidup</option>
-                <option value="Cerai Mati">Cerai Mati</option>
-            </select>
         </div>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
