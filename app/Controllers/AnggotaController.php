@@ -6,7 +6,7 @@ use App\Models\Anggota;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
-class AnggotaController extends ResourceController
+class AnggotaController extends BaseController
 {
     /**
      * Return an array of resource objects, themselves in array format.
@@ -38,7 +38,7 @@ class AnggotaController extends ResourceController
      */
     public function new()
     {
-        //
+        return view('anggota/create');
     }
 
     /**
@@ -48,7 +48,23 @@ class AnggotaController extends ResourceController
      */
     public function create()
     {
-        //
+         $validation = $this->validate([
+            'id_anggota' => 'required|numeric',
+            'nama_depan' => 'required',
+            'nama_belakang' => 'required',
+            'jabatan' => 'required',
+            'status_pernikahan' => 'required',
+        ]);
+
+        if (!$validation) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $data = $this->request->getPost();
+
+        $anggotaModel = new Anggota();
+        $anggotaModel->insert($data);
+        return redirect()->to('/anggota');
     }
 
     /**

@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <h1>List Anggota DPR</h1>
     <?php if (is_admin()) : ?>
-        <a href="/mata-kuliah/new" class="btn btn-primary mb-3">New Anggota</a>
+        <a href="/anggota/new" class="btn btn-primary mb-3">New Anggota</a>
     <?php endif; ?>
     <table class="table table-bordered">
         <thead>
@@ -26,7 +26,7 @@
             <?php foreach ($datas as $data): ?>
                 <tr>
                     <td><?= $data['id_anggota'] ?></td>
-                    <td> <a href="/mata-kuliah/<?= $data['id_anggota'] ?>"><?= $data['nama_depan'] ?></a> </td>
+                    <td> <a href="/anggota/<?= $data['id_anggota'] ?>"><?= $data['nama_depan'] ?></a> </td>
                     <td><?= $data['nama_belakang'] ?></td>
                     <td><?= $data['gelar_depan'] ?></td>
                     <td><?= $data['gelar_belakang'] ?></td>
@@ -36,7 +36,7 @@
                     <!-- Aksi -->
                     <?php if (is_admin()) : ?>
                         <td>
-                            <a href="/mata-kuliah/<?= $data['id_anggota'] ?>/edit" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="/anggota/<?= $data['id_anggota'] ?>/edit" class="btn btn-sm btn-warning">Edit</a>
                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<?= $data['id_anggota'] ?>">
                                 Delete
                             </button>
@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <form action="/mata-kuliah/<?= $data['id_anggota'] ?>" method="post">
+                                            <form action="/anggota/<?= $data['id_anggota'] ?>" method="post">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>
