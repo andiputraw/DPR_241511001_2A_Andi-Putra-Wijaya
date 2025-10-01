@@ -18,5 +18,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // $routes->resource('mata-kuliah', ['controller' => 'MataKuliahController']);
     $routes->resource('anggota', ['controller' => 'AnggotaController']);
     $routes->resource('komponen-gaji', ['controller' => 'KomponenGajiController']);
+    $routes->resource('penggajian', ['controller' => 'PenggajianController']);
+    
     // $routes->get('mata-kuliah/delete/(:num)', 'MataKuliahController::destroy/$1');
 });
