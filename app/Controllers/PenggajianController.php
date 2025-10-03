@@ -26,32 +26,15 @@ class PenggajianController extends BaseController
      */
     public function index()
     {
-        $anggotaModel =  new Anggota();
-        $data['datas'] = $anggotaModel
-            ->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'inner')
-            ->join('komponen_gaji', 'penggajian.id_komponen_gaji = komponen_gaji.id_komponen_gaji', 'inner')
-            ->groupBy('anggota.id_anggota') 
-            ->select("
-                anggota.*, 
-                SUM(
-                    CASE 
-                        WHEN komponen_gaji.satuan = 'hari' THEN komponen_gaji.nominal 
-                        ELSE 0 
-                    END    
-                ) as take_home_pay_harian,
-                SUM(
-                    CASE 
-                        WHEN komponen_gaji.satuan = 'Bulan' THEN komponen_gaji.nominal 
-                        ELSE 0 
-                    END
-                ) as take_home_pay_monthly, 
-                SUM(
-                    CASE 
-                        WHEN komponen_gaji.satuan = 'periode' THEN komponen_gaji.nominal 
-                        ELSE 0 
-                    END
-                ) as take_home_pay_periode"
-                )->findAll();
+        $anggotaModel =  new Penggajian();
+
+
+        $keyword = $this->request->getGet('keyword');
+
+      
+
+        $data['datas'] = $anggotaModel->getPenggajian($keyword);
+            
 
             for($i = 0; $i < count($data['datas']); $i++) {
                 // TODO: hitung harian
@@ -71,7 +54,31 @@ class PenggajianController extends BaseController
      */
     public function show($id = null)
     {
-        //
+        $anggotaModel = new Anggota();
+
+
+        $data['penggajian'] = $anggotaModel
+            ->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'left')
+            ->join('komponen_gaji', 'penggajian.id_komponen_gaji = komponen_gaji.id_komponen_gaji', 'inner')
+            ->where('anggota.id_anggota', $id)->findAll();
+
+        $data['nama'] = $data['penggajian'][0]['nama_depan'] . ' ' . $data['penggajian'][0]['nama_belakang'];
+
+        $data['totalBulanan'] = 0;
+        $data['totalPeriode'] = 0;
+
+        foreach ($data['penggajian'] as $penggajian) {
+            if($penggajian['satuan'] == 'Bulan') {
+                $data['totalBulanan'] += $penggajian['nominal'];
+            }else if ($penggajian['satuan'] == 'Periode') {
+                $data['totalPeriode'] += $penggajian['nominal'];
+            }
+        }
+
+        // 1 periode
+        $data['totalPeriode'] += $data['totalBulanan'] * 60;
+
+        return view('penggajian/show', $data);
     }
 
     /**
@@ -102,7 +109,6 @@ class PenggajianController extends BaseController
     {
         $input = $this->request->getPost();
         $penggajianModel = new Penggajian();
-
         $insertData = [];
 
         foreach ($input['penggajian'] as  $value) {
