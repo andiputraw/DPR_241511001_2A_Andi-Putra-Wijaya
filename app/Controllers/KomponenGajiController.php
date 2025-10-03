@@ -16,6 +16,15 @@ class KomponenGajiController extends BaseController
     public function index()
     {
         $model = new KomponenGaji();
+        $keyword = $this->request->getGet('keyword');
+        if($keyword) {
+            $model->orLike('id_komponen_gaji', $keyword);
+            $model->orLike('nama_komponen', $keyword);
+            $model->orLike('kategori', $keyword);
+            $model->orLike('jabatan', $keyword);
+            $model->orLike('nominal', $keyword);
+            $model->orLike('satuan', $keyword);
+        }
         $data['datas'] = $model->findAll();
         return view('komponen_gaji/index', $data);
     }
