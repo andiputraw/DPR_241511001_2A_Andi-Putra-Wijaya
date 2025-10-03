@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Anggota;
+use App\Models\Penggajian;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -114,6 +115,11 @@ class AnggotaController extends BaseController
      */
     public function delete($id = null)
     {
-        //
+        $anggotaModel = new Anggota();
+        $penggajianModel = new Penggajian();
+
+        $penggajianModel->where('id_anggota', $id)->delete();
+        $anggotaModel->delete($id);
+        return redirect()->to('/anggota');
     }
 }
