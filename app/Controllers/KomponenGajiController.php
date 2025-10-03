@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\KomponenGaji;
+use App\Models\Penggajian;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -111,6 +112,11 @@ class KomponenGajiController extends BaseController
      */
     public function delete($id = null)
     {
-        //
+        $komponenGajiModel = new KomponenGaji();
+        $penggajianModel = new Penggajian();
+
+        $penggajianModel->where('id_komponen_gaji', $id)->delete();
+        $komponenGajiModel->delete($id);
+        return redirect()->to('/komponen-gaji');
     }
 }
