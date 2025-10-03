@@ -11,13 +11,16 @@ use CodeIgniter\RESTful\ResourceController;
 
 class PenggajianController extends BaseController
 {
-    public function get_komponen_gaji($id) {
+    public function get_komponen_gaji_data($id) {
         $anggotaModel = new Anggota();
         $anggota = $anggotaModel->find($id);
-
+    
         $komponenGajiModel = new KomponenGaji();
         $komponenGaji = $komponenGajiModel->orWhere('jabatan', $anggota['jabatan'])->orWhere('jabatan', 'Semua')->findAll();
-        return $this->response->setJSON($komponenGaji);
+        return $komponenGaji;
+    }
+    public function get_komponen_gaji($id) {
+        return $this->response->setJSON($this->get_komponen_gaji_data($id)) ;
     }
     /**
      * Return an array of resource objects, themselves in array format.
@@ -131,7 +134,17 @@ class PenggajianController extends BaseController
      */
     public function edit($id = null)
     {
-        //
+        $anggotaModel = new Anggota();
+        $anggota = $anggotaModel
+            ->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'inner')
+            ->join('komponen_gaji', 'penggajian.id_komponen_gaji = komponen_gaji.id_komponen_gaji', 'inner')
+            ->where('penggajian.id_anggota', $id)
+            ->findAll($id);
+        
+        $data['anggota'] = $anggota[0];
+        $data['penggajian'] = $anggota;
+
+        return view('penggajian/edit', $data);
     }
 
     /**
@@ -143,7 +156,21 @@ class PenggajianController extends BaseController
      */
     public function update($id = null)
     {
-        //
+        $input = $this->request->getPost();
+        $penggajianModel = new Penggajian();
+        $penggajianModel->where('id_anggota', $id)->delete();
+
+        $insertData = [];
+        foreach ($input['penggajian'] as  $value) {
+            $insertData[] = [
+                'id_anggota' => $id,
+                'id_komponen_gaji' => $value
+            ];
+        }
+
+        $penggajianModel->insertBatch($insertData);
+
+        return redirect()->to('/penggajian');
     }
 
     /**
