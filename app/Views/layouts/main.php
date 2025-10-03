@@ -12,63 +12,32 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            /* Add transition for smoother layout changes */
+            transition: margin-left .5s;
         }
 
-        #sidebarToggle {
-            cursor: pointer;
-            width: 35px;
-            height: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            position: fixed;
-            top: 15px;
-            left: 200px;
-            /* Position inside sidebar */
-            z-index: 1001;
-            transition: left .5s;
-        }
-
-        #sidebarToggle span {
-            display: block;
-            width: 100%;
-            height: 3px;
-            background-color: white;
-            /* White bars for visibility on blue */
-            border-radius: 3px;
-            transition: background-color .5s;
-        }
-
-        body.sidebar-closed #sidebarToggle {
-            left: 15px;
-        }
-
-        body.sidebar-closed #sidebarToggle span {
-            background-color: #333;
-            /* Black bars for visibility on white */
-        }
-
+        /* --- Sidebar Styles --- */
         .sidebar {
-            width: 250px;
+            width: 0; /* START HIDDEN (Mobile First) */
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
             background-color: #007bff;
-            /* Blue */
             padding-top: 60px;
-            /* Make space for toggle */
             transition: width .5s;
             overflow-x: hidden;
             z-index: 1000;
             display: flex;
             flex-direction: column;
+            color: white;
         }
 
-        .sidebar.close {
-            width: 0;
+        /* This class will be toggled by JS to show the sidebar */
+        .sidebar.open {
+            width: 250px;
         }
-
+        
         .sidebar h3 {
             color: white;
             text-align: center;
@@ -80,62 +49,131 @@
             text-decoration: none;
             font-size: 18px;
             color: #ffffffff;
-            /* Light color for links */
             display: block;
-            white-space: nowrap;
+            white-space: nowrap; /* Prevents text wrap when sidebar collapses */
+            cursor: pointer;
         }
-
-        .navigation-content a, .navigation-content svg  {
+        
+        .navigation-content a, .navigation-content svg {
             color: white;
-        }
-
-
-        .navigation-content a:hover, .navigation-content svg:hover  {
-            color: #000000ff;
+            text-decoration: none;
+            vertical-align: middle; /* Aligns icon and text nicely */
+            margin-right: 8px; /* Adds space between icon and text */
         }
 
         .navigation-content div:hover {
             background-color: #ff8c00;
-            /* Orange on hover */
+        }
+        
+        .navigation-content div:hover a, 
+        .navigation-content div:hover svg {
             color: black;
         }
 
         .sidebar .logout-button {
-            color: black;
             margin-top: auto;
             margin-bottom: 1rem;
         }
+        .logout-button a {
+           color: white;
+        }
+        .logout-button a:hover {
+           color: black;
+        }
 
+        /* --- Main Content Styles --- */
         .main-content {
-            margin-left: 250px;
+            margin-left: 0; /* Full width by default (Mobile First) */
             padding: 20px;
             padding-top: 60px;
-            /* Adjust for fixed toggle */
             width: 100%;
             transition: margin-left .5s;
         }
 
-        .main-content.close {
-            margin-left: 0;
+        /* --- Hamburger Toggle Styles --- */
+        #sidebarToggle {
+            cursor: pointer;
+            width: 35px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            position: fixed;
+            top: 15px;
+            left: 15px; /* Positioned for closed state by default */
+            z-index: 1001;
+            transition: left .5s;
         }
 
+        #sidebarToggle span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #333; /* Black bars for visibility on white background */
+            border-radius: 3px;
+            transition: all .3s;
+        }
+
+        /* --- Selected Navigation Item --- */
         .navbar-selected {
             background: #ff8c00;
+        }
+
+        .navbar-selected a,
+        .navbar-selected svg {
             color: black;
         }
 
-        /* Add this new rule */
-        .navbar-selected a, .navbar-selected svg {
-            color: black;
-            text-decoration: none;
-            /* Optional: removes the underline */
-        }
 
-        
+        /* ================================================= */
+        /* ---  MEDIA QUERY FOR LARGER SCREENS (>=768px) --- */
+        /* ================================================= */
+        @media (min-width: 768px) {
+            
+            /* By default on desktop, the sidebar is open */
+            .sidebar {
+                width: 250px;
+            }
+
+            /* When it's closed via JS toggle, it becomes 0 */
+            .sidebar.close {
+                 width: 0;
+            }
+            
+            /* Push main content over to make space for the sidebar */
+            .main-content {
+                margin-left: 250px;
+            }
+
+            /* If sidebar is closed, content takes full width */
+            .main-content.close {
+                margin-left: 0;
+            }
+
+            /* Position the toggle inside the open sidebar */
+            #sidebarToggle {
+                left: 200px;
+            }
+
+            /* Make toggle bars white to show up on the blue sidebar */
+            #sidebarToggle span {
+                background-color: white;
+            }
+            
+            /* When sidebar is closed, move toggle to the left edge */
+            body.sidebar-closed #sidebarToggle {
+                left: 15px;
+            }
+
+            /* And make the bars black again for the white background */
+            body.sidebar-closed #sidebarToggle span {
+                background-color: #333;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body class="">
 
     <div id="sidebarToggle">
         <span></span>
@@ -146,42 +184,43 @@
     <div class="sidebar" id="sidebar">
         <div class="navigation-content">
             <h3>Cek DPR</h3>
-            <div class="<?= service('uri')->getSegment(1) == 'dashboard' ? 'navbar-selected' : '' ?> dashboard">
+            <div class="<?= service('uri')->getSegment(1) == 'dashboard' ? 'navbar-selected' : '' ?> dashboard" onclick="window.location.href='/dashboard';">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house">
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 </svg>
                 <a href="/dashboard">Home</a>
             </div>
-                <div class="<?= service('uri')->getSegment(1) == 'anggota' ? 'navbar-selected' : '' ?> navigation-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house">
-                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <div class="<?= service('uri')->getSegment(1) == 'anggota' ? 'navbar-selected' : '' ?> navigation-item" onclick="window.location.href='/anggota';">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <a href="/anggota">Anggota</a>
+            </div>
+            <div class="<?= service('uri')->getSegment(1) == 'penggajian' ? 'navbar-selected' : '' ?> navigation-item" onclick="window.location.href='/penggajian';">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet">
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                </svg>
+                <a href="/penggajian">Penggajian</a>
+            </div>
+            <?php if (is_admin()) : ?>
+                <div class="<?= service('uri')->getSegment(1) == 'komponen-gaji' ? 'navbar-selected' : '' ?> navigation-item" onclick="window.location.href='/komponen-gaji';">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-archive">
+                         <rect width="20" height="5" x="2" y="3" rx="1" />
+                         <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+                         <path d="M10 12h4" />
                     </svg>
-
-                    <a href="/anggota">Anggota</a>
-                </div>
-                <div class="<?= service('uri')->getSegment(1) == 'penggajian' ? 'navbar-selected' : '' ?> navigation-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house">
-                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    </svg>
-
-                    <a href="/penggajian">Penggajian</a>
-                </div>
-                <?php if (is_admin()) : ?>
-                <div class="<?= service('uri')->getSegment(1) == 'komponen-gaji' ? 'navbar-selected' : '' ?> navigation-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house">
-                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    </svg>
-
                     <a href="/komponen-gaji">Komponen Gaji</a>
                 </div>
-                <?php endif; ?>
-        </div>
-        <div class="logout-button">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+            <?php endif; ?>
+            <div class="logout-button">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+            </div>
         </div>
     </div>
 
@@ -189,7 +228,6 @@
         <?= $this->renderSection('content') ?>
     </div>
 
-    <!-- Logout Modal -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -211,9 +249,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('sidebarToggle').addEventListener('click', function() {
-            document.body.classList.toggle('sidebar-closed');
+            // This single line on the body is great for controlling styles globally
+            document.body.classList.toggle('sidebar-closed'); 
+            
+            // These two lines handle the actual layout shift
             document.getElementById('sidebar').classList.toggle('close');
             document.getElementById('main-content').classList.toggle('close');
+        });
+
+        // Small improvement: Detect screen size on load to set initial state correctly
+        // This prevents a "flash" of the wrong layout on desktop
+        window.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+
+            if (window.innerWidth < 768) {
+                // If on mobile, ensure it starts closed
+                document.body.classList.add('sidebar-closed');
+                sidebar.classList.add('close');
+                mainContent.classList.add('close');
+            } else {
+                // If on desktop, ensure it starts open
+                document.body.classList.remove('sidebar-closed');
+                sidebar.classList.remove('close');
+                mainContent.classList.remove('close');
+            }
         });
     </script>
 </body>
