@@ -88,7 +88,9 @@ class KomponenGajiController extends BaseController
      */
     public function edit($id = null)
     {
-        //
+        $model = new KomponenGaji();
+        $data['data'] = $model->find($id);
+        return view('komponen_gaji/edit', $data);
     }
 
     /**
@@ -100,7 +102,11 @@ class KomponenGajiController extends BaseController
      */
     public function update($id = null)
     {
-        //
+        $model = new KomponenGaji();
+
+        $data = $this->request->getPost();
+        $model->update($id, $data);
+        return redirect()->to('/komponen-gaji');
     }
 
     /**
