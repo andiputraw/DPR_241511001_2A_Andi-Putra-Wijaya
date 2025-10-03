@@ -155,6 +155,9 @@ class PenggajianController extends BaseController
      */
     public function delete($id = null)
     {
-        //
+        $penggajianModel = new Penggajian();
+
+        $penggajianModel->where('id_anggota', $id)->delete();
+        return redirect()->to('/penggajian');
     }
 }
