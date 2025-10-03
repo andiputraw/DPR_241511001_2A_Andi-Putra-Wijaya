@@ -36,7 +36,7 @@ class AnggotaController extends BaseController
      */
     public function show($id = null)
     {
-        //
+        return redirect()->to("penggajian/$id");
     }
 
     /**
