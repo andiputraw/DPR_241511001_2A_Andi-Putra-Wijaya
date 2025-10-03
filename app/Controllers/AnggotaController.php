@@ -15,6 +15,13 @@ class AnggotaController extends BaseController
      */
     public function index(){       
         $model = new Anggota();
+        $keyword = $this->request->getGet('keyword');
+        if ($keyword) {
+            $model->orLike('id_anggota', $keyword);
+            $model->orLike('nama_depan', $keyword);
+            $model->orLike('nama_belakang', $keyword);
+            $model->orLike('jabatan', $keyword);
+        }
         $data['datas'] = $model->findAll();
         return view('anggota/index', $data);
     }
@@ -76,7 +83,10 @@ class AnggotaController extends BaseController
      */
     public function edit($id = null)
     {
-        //
+        $anggotaModel = new Anggota();
+        $data['data'] = $anggotaModel->find($id);
+        
+        return view('anggota/edit', $data);
     }
 
     /**
@@ -88,7 +98,11 @@ class AnggotaController extends BaseController
      */
     public function update($id = null)
     {
-        //
+        $anggotaModel = new Anggota();
+        $data = $this->request->getPost();
+
+        $anggotaModel->update($id, $data);
+        return redirect()->to('/anggota');
     }
 
     /**
