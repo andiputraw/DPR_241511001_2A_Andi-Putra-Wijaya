@@ -19,6 +19,4 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->resource('komponen-gaji', ['controller' => 'KomponenGajiController']);
     $routes->get('penggajian/komponen/(:num)', 'PenggajianController::get_komponen_gaji/$1');
     $routes->resource('penggajian', ['controller' => 'PenggajianController']);
-    
-    // $routes->get('mata-kuliah/delete/(:num)', 'MataKuliahController::destroy/$1');
 });

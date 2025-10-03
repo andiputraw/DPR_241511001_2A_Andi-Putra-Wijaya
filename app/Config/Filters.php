@@ -35,6 +35,8 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'auth'          => \App\Filters\AuthFilter::class,
+        'auth-admin'    => \App\Filters\AuthAdminFilter::class,
+        'public-view-only' => \App\Filters\PublicViewOnly::class
     ];
 
     /**
@@ -107,5 +109,19 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'public-view-only' => [
+            'before' => [
+                'anggota/*',
+                'penggajian/*',
+            ]
+            ],
+        'auth-admin' => [
+            'before' => [
+                'anggota/*',
+                'penggajian/*/edit',
+                'komponen-gaji/*',
+            ]
+        ]
+    ];
 }
