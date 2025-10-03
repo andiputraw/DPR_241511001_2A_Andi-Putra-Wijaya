@@ -101,6 +101,7 @@
         }
 
         .sidebar .logout-button {
+            color: black;
             margin-top: auto;
             margin-bottom: 1rem;
         }
@@ -129,6 +130,8 @@
             text-decoration: none;
             /* Optional: removes the underline */
         }
+
+        
     </style>
 </head>
 

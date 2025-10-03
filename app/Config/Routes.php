@@ -15,7 +15,6 @@ $routes->get('logout', 'AuthController::logout');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'Dashboard::index');
-    // $routes->resource('mata-kuliah', ['controller' => 'MataKuliahController']);
     $routes->resource('anggota', ['controller' => 'AnggotaController']);
     $routes->resource('komponen-gaji', ['controller' => 'KomponenGajiController']);
     $routes->get('penggajian/komponen/(:num)', 'PenggajianController::get_komponen_gaji/$1');

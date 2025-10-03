@@ -41,4 +41,50 @@ class Penggajian extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getPenggajian($keyword)
+    {
+        $subQueryBuilder = $this->db->table('anggota');
+        $subquery = $subQueryBuilder->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'inner')
+            ->join('komponen_gaji', 'penggajian.id_komponen_gaji = komponen_gaji.id_komponen_gaji', 'inner')
+            ->groupBy('anggota.id_anggota')
+            ->select(
+                "
+                anggota.id_anggota as id,
+                anggota.*, 
+                SUM(
+                    CASE 
+                        WHEN komponen_gaji.satuan = 'hari' THEN komponen_gaji.nominal 
+                        ELSE 0 
+                    END    
+                ) as take_home_pay_harian,
+                SUM(
+                    CASE 
+                        WHEN komponen_gaji.satuan = 'Bulan' THEN komponen_gaji.nominal 
+                        ELSE 0 
+                    END
+                ) as take_home_pay_monthly, 
+                SUM(
+                    CASE 
+                        WHEN komponen_gaji.satuan = 'periode' THEN komponen_gaji.nominal 
+                        ELSE 0 
+                    END
+                ) as take_home_pay_periode"
+            );
+
+        $cur = $this->db->newQuery()->fromSubquery($subquery, 'penggajian');
+        if ($keyword) {
+            $cur->orLike('id', $keyword);
+            $cur->orLike('nama_depan', $keyword);
+            $cur->orLike('nama_belakang', $keyword);
+            $cur->orLike('jabatan', $keyword);
+            $cur->orLike('take_home_pay_monthly', $keyword);
+            $cur->orLike('take_home_pay_periode', $keyword);
+        }
+
+        
+        $res = $cur->get()->getResultArray();
+
+        return $res;
+    }
 }
