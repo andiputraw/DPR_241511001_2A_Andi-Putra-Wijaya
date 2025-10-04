@@ -25,7 +25,7 @@
         </div>
         <div class="mb-3">
             <label for="nama_belakang" class="form-label">Nama Belakang</label>
-            <input type="text" class="form-control" id="nama_belakang" name="nama_belakang" value="<?= old('nama_belakang') ?>s" >
+            <input type="text" class="form-control" id="nama_belakang" name="nama_belakang" value="<?= old('nama_belakang') ?>" >
         </div>
 
 

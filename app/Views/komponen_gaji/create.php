@@ -25,7 +25,7 @@
         </div>
         <div class="mb-3">
             <label for="nominal" class="form-label">Nominal</label>
-            <input type="number" class="form-control" id="nominal" name="nominal" value="<?= old('nominal') ?>s" >
+            <input type="number" class="form-control" id="nominal" name="nominal" value="<?= old('nominal') ?>" >
         </div>
 
 
@@ -46,7 +46,7 @@
         <div class="mb-3">  
             <label for="satuan">Pilih satuan</label>
             <select class="form-select" name="satuan" id="satuan">
-                <option selected value="">Status Satuan</option>
+                <option selected value="">Satuan</option>
                 <option value="Periode">Periode</option>
                 <option value="Bulan">Bulan</option>
                 <option value="Hari">Hari</option>
