@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="container mt-5">
-    <h1>Create New Penggajian</h1>
+    <h1>Update Penggajian</h1>
 
     <?php if (session()->has('errors')) : ?>
         <div class="alert alert-danger">
