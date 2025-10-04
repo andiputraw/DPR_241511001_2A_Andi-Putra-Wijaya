@@ -26,6 +26,7 @@ class AuthAdminFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if(!is_admin()){
+            
             return redirect()->back();
         }
     }

@@ -9,6 +9,15 @@ use CodeIgniter\RESTful\ResourceController;
 
 class KomponenGajiController extends BaseController
 {
+    private $validationRules = [
+            'id_komponen_gaji' => 'required|numeric',
+            'nama_komponen' => 'required',
+            'nominal' => 'required',
+            'kategori' => 'required',
+            'satuan' => 'required',
+            'jabatan' => 'required',
+    ];
+
     /**
      * Return an array of resource objects, themselves in array format.
      *
@@ -59,14 +68,7 @@ class KomponenGajiController extends BaseController
      */
     public function create()
     {
-        $validation = $this->validate([
-            'id_komponen_gaji' => 'required|numeric',
-            'nama_komponen' => 'required',
-            'nominal' => 'required',
-            'kategori' => 'required',
-            'satuan' => 'required',
-            'jabatan' => 'required',
-        ]);
+        $validation = $this->validate($this->validationRules);
 
         if (!$validation) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -88,6 +90,7 @@ class KomponenGajiController extends BaseController
      */
     public function edit($id = null)
     {
+     
         $model = new KomponenGaji();
         $data['data'] = $model->find($id);
         return view('komponen_gaji/edit', $data);
@@ -102,6 +105,13 @@ class KomponenGajiController extends BaseController
      */
     public function update($id = null)
     {
+        
+        $validation = $this->validate($this->validationRules);
+        
+        if (!$validation) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+        
         $model = new KomponenGaji();
 
         $data = $this->request->getPost();
