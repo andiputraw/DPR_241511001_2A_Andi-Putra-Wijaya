@@ -9,6 +9,14 @@ use CodeIgniter\RESTful\ResourceController;
 
 class AnggotaController extends BaseController
 {
+    private $validationRules = [
+            'id_anggota' => 'required|numeric',
+            'nama_depan' => 'required',
+            'nama_belakang' => 'required',
+            'jabatan' => 'required',
+            'status_pernikahan' => 'required',
+            'jumlah_anak' => 'required|numeric',
+    ];
     /**
      * Return an array of resource objects, themselves in array format.
      *
@@ -56,13 +64,7 @@ class AnggotaController extends BaseController
      */
     public function create()
     {
-         $validation = $this->validate([
-            'id_anggota' => 'required|numeric',
-            'nama_depan' => 'required',
-            'nama_belakang' => 'required',
-            'jabatan' => 'required',
-            'status_pernikahan' => 'required',
-        ]);
+         $validation = $this->validate($this->validationRules);
 
         if (!$validation) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -99,6 +101,12 @@ class AnggotaController extends BaseController
      */
     public function update($id = null)
     {
+        $validation = $this->validate($this->validationRules);
+
+        if (!$validation) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         $anggotaModel = new Anggota();
         $data = $this->request->getPost();
 
