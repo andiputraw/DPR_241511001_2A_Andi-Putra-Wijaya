@@ -103,7 +103,12 @@
                 /**@type {HTMLSelectElement} */
                 const self = this
                 // cek biar gak ada mutasi dom lebih dari 1x
-                if(self.children.length > 1) return
+                const nonSelectedOptions = self.querySelectorAll('option:not([selected])')
+        
+                nonSelectedOptions.forEach(opt => {
+                    if(opt.value == this.value) return
+                    opt.remove()
+                })
                 
                 for(const k of listKategori.filter(k => !getSelectedKomponenPenggajian().includes(k.id_komponen_gaji))) {
                     const opt = document.createElement('option')
