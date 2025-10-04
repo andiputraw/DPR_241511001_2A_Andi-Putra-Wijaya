@@ -11,16 +11,18 @@ use CodeIgniter\RESTful\ResourceController;
 
 class PenggajianController extends BaseController
 {
-    public function get_komponen_gaji_data($id) {
+    public function get_komponen_gaji_data($id)
+    {
         $anggotaModel = new Anggota();
         $anggota = $anggotaModel->find($id);
-    
+
         $komponenGajiModel = new KomponenGaji();
         $komponenGaji = $komponenGajiModel->orWhere('jabatan', $anggota['jabatan'])->orWhere('jabatan', 'Semua')->findAll();
         return $komponenGaji;
     }
-    public function get_komponen_gaji($id) {
-        return $this->response->setJSON($this->get_komponen_gaji_data($id)) ;
+    public function get_komponen_gaji($id)
+    {
+        return $this->response->setJSON($this->get_komponen_gaji_data($id));
     }
     /**
      * Return an array of resource objects, themselves in array format.
@@ -34,17 +36,17 @@ class PenggajianController extends BaseController
 
         $keyword = $this->request->getGet('keyword');
 
-      
+
 
         $data['datas'] = $anggotaModel->getPenggajian($keyword);
-            
 
-            for($i = 0; $i < count($data['datas']); $i++) {
-                // TODO: hitung harian
-                // TODO: tambah take home pay harian ke per-bulan
-                // TODO: tambah take home pay harian ke per-periode
-                $data['datas'][$i]['take_home_pay_periode'] += $data['datas'][$i]['take_home_pay_monthly'] * 60 ;
-            }
+
+        for ($i = 0; $i < count($data['datas']); $i++) {
+            // TODO: hitung harian
+            // TODO: tambah take home pay harian ke per-bulan
+            // TODO: tambah take home pay harian ke per-periode
+            $data['datas'][$i]['take_home_pay_periode'] += $data['datas'][$i]['take_home_pay_monthly'] * 60;
+        }
         return view('penggajian/index', $data);
     }
 
@@ -71,9 +73,9 @@ class PenggajianController extends BaseController
         $data['totalPeriode'] = 0;
 
         foreach ($data['penggajian'] as $penggajian) {
-            if($penggajian['satuan'] == 'Bulan') {
+            if ($penggajian['satuan'] == 'Bulan') {
                 $data['totalBulanan'] += $penggajian['nominal'];
-            }else if ($penggajian['satuan'] == 'Periode') {
+            } else if ($penggajian['satuan'] == 'Periode') {
                 $data['totalPeriode'] += $penggajian['nominal'];
             }
         }
@@ -94,12 +96,12 @@ class PenggajianController extends BaseController
         $anggotaModel = new Anggota();
         /**
          *  LEFT JOIN penggajian p ON p.id_anggota = a.id_anggota 
-	    *  WHERE p.id_komponen_gaji IS NULL 
-        */
+         *  WHERE p.id_komponen_gaji IS NULL 
+         */
         $data['anggota'] = $anggotaModel->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'left')
-        ->where('penggajian.id_komponen_gaji', null)
-        ->select('anggota.id_anggota, anggota.nama_depan, anggota.nama_belakang')
-        ->findAll();
+            ->where('penggajian.id_komponen_gaji', null)
+            ->select('anggota.id_anggota, anggota.nama_depan, anggota.nama_belakang')
+            ->findAll();
         return view('penggajian/create', $data);
     }
 
@@ -111,6 +113,15 @@ class PenggajianController extends BaseController
     public function create()
     {
         $input = $this->request->getPost();
+
+        $input['penggajian'] = array_filter($input['penggajian'], function ($value) {
+            return !empty($value);
+        });
+
+        if (empty($input['penggajian'])) {
+            return redirect()->back()->with('errors', ['komponen penggajian' => 'Penggajian tidak boleh kosong']);
+        }
+
         $penggajianModel = new Penggajian();
         $insertData = [];
 
@@ -140,7 +151,7 @@ class PenggajianController extends BaseController
             ->join('komponen_gaji', 'penggajian.id_komponen_gaji = komponen_gaji.id_komponen_gaji', 'inner')
             ->where('penggajian.id_anggota', $id)
             ->findAll($id);
-        
+
         $data['anggota'] = $anggota[0];
         $data['penggajian'] = $anggota;
 
@@ -157,6 +168,15 @@ class PenggajianController extends BaseController
     public function update($id = null)
     {
         $input = $this->request->getPost();
+        $input['penggajian'] = array_filter($input['penggajian'], function ($value) {
+            return !empty($value);
+        });
+
+        if (empty($input['penggajian'])) {
+            return redirect()->back()->with('errors', ['komponen penggajian' => 'Penggajian tidak boleh kosong']);
+        }
+
+
         $penggajianModel = new Penggajian();
         $penggajianModel->where('id_anggota', $id)->delete();
 
