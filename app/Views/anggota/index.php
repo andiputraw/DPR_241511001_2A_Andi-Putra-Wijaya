@@ -21,7 +21,8 @@
             </button>
         </div>
     </form>
-    <table class="table table-bordered table-striped ">
+    <div class="table-responsive ">
+    <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>ID</th>
@@ -84,5 +85,6 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
 </div>
 <?= $this->endSection() ?>
