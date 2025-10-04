@@ -48,19 +48,23 @@ class Penggajian extends Model
         $subquery = $subQueryBuilder->join('penggajian', 'anggota.id_anggota = penggajian.id_anggota', 'inner')
             ->join('komponen_gaji', 'penggajian.id_komponen_gaji = komponen_gaji.id_komponen_gaji', 'inner')
             ->groupBy('anggota.id_anggota')
-            ->select(
+            ->select( // kondisi komponen masih di hardcode, harusnya nambah kolom baru buat pengkondisian. Tapi karena gak boleh nambah kolom baru, ini yang paling memungkinkan
                 "
                 anggota.id_anggota as id,
                 anggota.*, 
                 SUM(
                     CASE 
-                        WHEN komponen_gaji.satuan = 'hari' THEN komponen_gaji.nominal 
-                        ELSE 0 
-                    END    
-                ) as take_home_pay_harian,
-                SUM(
-                    CASE 
-                        WHEN komponen_gaji.satuan = 'Bulan' THEN komponen_gaji.nominal 
+                        WHEN 
+                            komponen_gaji.satuan = 'Bulan' 
+                            AND (komponen_gaji.nama_komponen != 'Tunjangan Istri/Suami' OR
+                                ( komponen_gaji.nama_komponen = 'Tunjangan Istri/Suami' AND anggota.status_pernikahan = 'Kawin' )) 
+                            AND (komponen_gaji.nama_komponen != 'Tunjangan Anak' OR 
+                                ( komponen_gaji.nama_komponen = 'Tunjangan Anak' AND (anggota.jumlah_anak > 0)))
+                            THEN 
+                                CASE WHEN komponen_gaji.nama_komponen = 'Tunjangan Anak' 
+                                    THEN komponen_gaji.nominal * LEAST(GREATEST(anggota.jumlah_anak, 0), 2)
+                                ELSE komponen_gaji.nominal
+                                END
                         ELSE 0 
                     END
                 ) as take_home_pay_monthly, 

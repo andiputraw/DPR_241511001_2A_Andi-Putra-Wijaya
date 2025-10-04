@@ -74,7 +74,16 @@ class PenggajianController extends BaseController
 
         foreach ($data['penggajian'] as $penggajian) {
             if ($penggajian['satuan'] == 'Bulan') {
-                $data['totalBulanan'] += $penggajian['nominal'];
+                if( $penggajian['nama_komponen'] == 'Tunjangan Anak' ) {
+                    $data['totalBulanan'] += $penggajian['nominal'] * min(max($data['penggajian'][0]['jumlah_anak'], 0), 2);
+                }else if( $penggajian['nama_komponen'] == 'Tunjangan Istri/Suami' ) {
+                    if( $data['penggajian'][0]['status_pernikahan'] == 'Kawin' ) {
+                        $data['totalBulanan'] += $penggajian['nominal'];
+                    }
+                } else {
+                    $data['totalBulanan'] += $penggajian['nominal'];
+                }
+                
             } else if ($penggajian['satuan'] == 'Periode') {
                 $data['totalPeriode'] += $penggajian['nominal'];
             }
