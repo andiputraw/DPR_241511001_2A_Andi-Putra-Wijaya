@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <div class="container mt-5">
     <h1>Data gaji <?= $nama ?> </h1>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr class="table-primary">
                 <td>Nama</td>
