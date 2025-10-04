@@ -40,6 +40,10 @@
             <input type="text" class="form-control" id="gelar_belakang" name="gelar_belakang"   value="<?= old('gelar_belakang') ?? $data['gelar_belakang'] ?>" >
         </div>
 
+        <div class="mb-3" >
+            <label for="jumlah_anak" class="form-label">Jumlah Anak</label>
+            <input type="number" class="form-control" id="jumlah_anak" name="jumlah_anak" value="<?= old('jumlah_anak') ?? $data['jumlah_anak'] ?>" >
+        </div>
 
         <div class="mb-3">
             <div class="mb-3">

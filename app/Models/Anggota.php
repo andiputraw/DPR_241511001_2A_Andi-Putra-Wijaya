@@ -12,7 +12,7 @@ class Anggota extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nama_depan', 'nama_belakang', 'gelar_depan', 'gelar_belakang', 'jabatan', 'status_pernikahan'];
+    protected $allowedFields    = ['nama_depan', 'nama_belakang', 'gelar_depan', 'gelar_belakang', 'jabatan', 'status_pernikahan', 'jumlah_anak'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

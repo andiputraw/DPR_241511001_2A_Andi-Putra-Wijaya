@@ -31,7 +31,7 @@
                 <th>Gelar Belakang</th>
                 <th>Jabatan</th>
                 <th>Status Pernikahan</th>
-
+                <th>Jumlah Anak</th>
                 <?php if (is_admin()) : ?>
                     <th>Actions</th>
                 <?php endif; ?>
@@ -47,6 +47,7 @@
                     <td><?= $data['gelar_belakang'] ?></td>
                     <td><?= $data['jabatan'] ?></td>
                     <td><?= $data['status_pernikahan'] ?></td>
+                    <td><?= $data['jumlah_anak'] ?></td>
 
                     <!-- Aksi -->
                     <?php if (is_admin()) : ?>
